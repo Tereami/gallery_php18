@@ -53,8 +53,8 @@ if (isset($_POST['login']) && isset($_POST['password'])) {
                 <a href="?exit=1"> Выйти из системы </a>
             <?php else : ?>
                 <form method="POST" action="loginform.php">
-                    <input type="text" name="login" placeholder="enter login">
-                    <input type="password" name="password" placeholder="your password">
+                    <input type="text" name="login" placeholder="ваш логин">
+                    <input type="password" name="password" placeholder="ваш пароль">
                     <input type="submit" value="Войти">
                 </form>
                 <div><a href="reg.php">Регистрация</a></div>

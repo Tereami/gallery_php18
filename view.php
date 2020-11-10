@@ -6,6 +6,8 @@ $imagesFolder = $curFolder . '/uploads/';
 $imageName = "";
 $imagePath = "";
 
+
+
 if (empty($_GET['id'])) {
     header('location: index.php');
 } else {
@@ -16,14 +18,25 @@ $commentsFileName = pathinfo($imageName, PATHINFO_FILENAME) . '.txt';
 $commentsFilePath = $imagesFolder . $commentsFileName;
 $comments = [];
 
-if(file_exists($commentsFilePath)) {
+if (file_exists($commentsFilePath)) {
     $comments = file($commentsFilePath, FILE_IGNORE_NEW_LINES);
 }
 
 if (isset($_POST['comm'])) {
-    $commentLine = "\r\n{$_SESSION['username']} говорит: \"{$_POST['comm']} \"";
+    $date = date("Y-m-d H:i:s");
+    $commentLine = "\r\n{$_SESSION['username']} говорит: {$_POST['comm']} [$date]";
     file_put_contents($commentsFilePath, $commentLine, FILE_APPEND);
     header("location: view.php?id=$imageName");
+}
+
+if(isset($_GET['action']) && $_GET['action']=="delete") {
+    unlink($imagePath);
+    if (file_exists($commentsFilePath)) {
+        unlink($commentsFilePath);
+    }
+    $previewImagePath = $imagesFolder . '/preview/' . $imageName;
+    unlink($previewImagePath);
+    header('location: index.php');
 }
 
 ?>
@@ -44,6 +57,9 @@ if (isset($_POST['comm'])) {
         </p>
 
         <img class="viewImageImg" src="<?php echo '\uploads\\' . $imageName ?>">
+        <p>
+            <a href="/view.php?id=<?php echo $imageName; ?>&action=delete">Удалить картинку</a>
+        </p>
         <h3>Комментарии к фото:</h3>
         <div class="comments">
             <?php
